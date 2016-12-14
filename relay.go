@@ -12,12 +12,12 @@ import (
 
 //const hostname = "localhost"
 //const port = "8876"
-//const hostname = "luna.red"
-//const port = "44444"
+const hostname = "luna.red"
+const port = "44444"
 //const unixPath = "/var/www/bot/irc/sock"
-//const password = "bokunopico911"
+const password = "bokunopico911"
 
-//const nickname = "SystemD"
+const nickname = "SystemD"
 
 type Config struct {
     hostname string
@@ -128,7 +128,7 @@ func multiplexer(ircConn net.Conn, botConn *net.Conn) {
 }
 
 func main() {
-    err := ini.MapTo(config, "relay.ini`")
+    //err := ini.MapTo(config, "relay.ini`")
 
 	ircConn := connect()
 	fmt.Println("Got irc connection")
