@@ -6,17 +6,19 @@ import (
 	"net"
 	"os/exec"
 	"regexp"
-    "time"
+	"time"
 )
 
 //const hostname = "localhost"
 //const port = "8876"
 const hostname = "luna.red"
 const port = "44444"
+
 //const unixPath = "/var/www/bot/irc/sock"
 const password = "bokunopico911"
 
 const nickname = "SystemD"
+
 /*
 type Config struct {
     hostname string
@@ -80,7 +82,7 @@ func ircListener(ircConn net.Conn, botConn *net.Conn) {
 		msg := scanner.Text()
 		fmt.Printf("FROM IRC: %s \n", msg)
 		rePing := regexp.MustCompile(`PING :(.+)$`)
-        rePriv := regexp.MustCompile(`:([^!]+)!([^@]+)@([^ ]+) PRIVMSG ([^ ]+) :(.+)$`)
+		rePriv := regexp.MustCompile(`:([^!]+)!([^@]+)@([^ ]+) PRIVMSG ([^ ]+) :(.+)$`)
 
 		find := func(reg *regexp.Regexp, msg string) []string {
 			return reg.FindStringSubmatch(msg)
@@ -90,14 +92,14 @@ func ircListener(ircConn net.Conn, botConn *net.Conn) {
 		if rePing.MatchString(msg) {
 			go pingHandler(ircConn, find(rePing, msg))
 		} else if rePriv.MatchString(msg) {
-            command := find(rePriv, msg)[5]
-            if command == "!reload" {
-                go reloadBot()
-            }
-        } else {
+			command := find(rePriv, msg)[5]
+			if command == "!reload" {
+				go reloadBot()
+			}
+		} else {
 			if botConn != nil && *botConn != nil {
-                fmt.Println(botConn)
-                fmt.Println(*botConn)
+				fmt.Println(botConn)
+				fmt.Println(*botConn)
 				fmt.Fprintf(*botConn, "%s\r\n", msg)
 			}
 		}
@@ -106,8 +108,8 @@ func ircListener(ircConn net.Conn, botConn *net.Conn) {
 
 func botListener(ircConn net.Conn, botConn *net.Conn) {
 	for {
-		if (botConn == nil || *botConn == nil) {
-            fmt.Println("Tried making scanner, botConn is: ", botConn)
+		if botConn == nil || *botConn == nil {
+			fmt.Println("Tried making scanner, botConn is: ", botConn)
 			time.Sleep(2 * time.Second)
 			continue
 		}
@@ -126,7 +128,7 @@ func multiplexer(ircConn net.Conn, botConn *net.Conn) {
 }
 
 func main() {
-    //err := ini.MapTo(config, "relay.ini`")
+	//err := ini.MapTo(config, "relay.ini`")
 
 	ircConn := connect()
 	fmt.Println("Got irc connection")
@@ -137,27 +139,27 @@ func main() {
 	defer ircConn.Close()
 	defer unixListener.Close()
 
-    var botConn net.Conn
+	var botConn net.Conn
 
 	//go multiplexer(ircConn, botConn)
 	go ircListener(ircConn, &botConn)
 	go botListener(ircConn, &botConn)
 
-    var err error
-    //go startListener(botConn, unixListener)
-    for {
+	var err error
+	//go startListener(botConn, unixListener)
+	for {
 		botConn, err = unixListener.Accept()
 		if err != nil {
 			fmt.Println(err)
 		}
 		fmt.Println("Accepted one connection")
-    }
-    //startListener(botConn, unixListener)
-//    go runBot()
+	}
+	//startListener(botConn, unixListener)
+	//    go runBot()
 }
 
 func startListener(botConn *net.Conn, listener net.Listener) {
-    var err error
+	var err error
 
 	for {
 		*botConn, err = listener.Accept()
