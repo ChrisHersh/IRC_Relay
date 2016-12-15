@@ -7,7 +7,6 @@ import (
 	"os/exec"
 	"regexp"
     "time"
-    "ini"
 )
 
 //const hostname = "localhost"
@@ -18,7 +17,7 @@ const port = "44444"
 const password = "bokunopico911"
 
 const nickname = "SystemD"
-
+/*
 type Config struct {
     hostname string
     port string
@@ -30,7 +29,7 @@ type misc struct {
 }
 
 var config Config
-
+*/
 //Creates the inital connection to the irc server
 func connect() net.Conn {
 	ircConnection, err := net.Dial("tcp", hostname+":"+port)
@@ -95,8 +94,7 @@ func ircListener(ircConn net.Conn, botConn *net.Conn) {
             if command == "!reload" {
                 go reloadBot()
             }
-        }
-        else {
+        } else {
 			if botConn != nil && *botConn != nil {
                 fmt.Println(botConn)
                 fmt.Println(*botConn)
